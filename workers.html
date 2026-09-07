@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>افراد | سامانه کارگاه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <div class="topbar" style="display:flex;justify-content:space-between;align-items:center;">
+    <div class="date-big">افراد</div>
+    <button onclick="handleLogout()" style="background:none;border:1px solid rgba(255,255,255,.3);color:#F4F0E8;border-radius:6px;padding:6px 12px;font-size:.8rem;font-family:inherit;">خروج</button>
+  </div>
+
+  <div class="container-app">
+    <div class="top-title-row" style="margin-top:6px;">
+      <div></div>
+      <button class="btn-app small" onclick="openAddPersonSheet()">+ افزودن نفر</button>
+    </div>
+    <div id="persons-list">در حال بارگذاری...</div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><span class="icon">🏠</span>خانه</a>
+    <a href="calendar.html"><span class="icon">📅</span>تقویم</a>
+    <a href="workers.html" class="active"><span class="icon">👷</span>افراد</a>
+    <a href="inventory.html"><span class="icon">📦</span>مصالح</a>
+    <a href="tools.html"><span class="icon">🧰</span>ابزار</a>
+  </nav>
+
+  <!-- ===== sheet: add/edit person ===== -->
+  <div class="sheet" id="sheet-person">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-person')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="person-sheet-title">افزودن نفر جدید</div>
+    <form onsubmit="submitPerson(event)">
+      <label class="form-label-fa">نام</label>
+      <input class="form-control-fa" id="p-name" required>
+
+      <label class="form-label-fa">نقش / شغل</label>
+      <input class="form-control-fa" id="p-job" placeholder="مثلاً: برقکار، بنا، نگهبان">
+
+      <label class="form-label-fa">یادداشت (اختیاری)</label>
+      <textarea class="form-control-fa" id="p-notes" rows="2"></textarea>
+
+      <div class="check-row" id="p-active-row" style="display:none;">
+        <input type="checkbox" id="p-active" checked>
+        <span class="who">فعال</span>
+      </div>
+
+      <div id="p-attendance-hist"></div>
+
+      <div style="margin-top:18px;">
+        <button type="submit" class="btn-app">ذخیره</button>
+      </div>
+      <div style="margin-top:10px;">
+        <button type="button" id="p-delete-btn" class="btn-app outline" style="display:none;color:var(--danger);border-color:var(--danger);" onclick="deletePerson()">حذف این شخص</button>
+      </div>
+    </form>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/jalali.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/workers.js"></script>
+</body>
+</html>

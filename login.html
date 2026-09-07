@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>ورود | سامانه کارگاه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  body { padding-bottom: 0; display:flex; align-items:center; min-height:100vh; }
+  .login-wrap { width:100%; max-width:400px; margin:0 auto; padding:24px; }
+  .login-hero { text-align:center; margin-bottom:28px; }
+  .login-hero .mark {
+    width:56px;height:56px;background:var(--ink);border-radius:12px;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+    color:#fff;font-size:1.6rem;
+  }
+  .login-hero h1 { font-size:1.3rem; }
+  .login-hero p { color:var(--muted); font-size:.9rem; }
+</style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-hero">
+      <div class="mark">🏗️</div>
+      <h1>سامانه مدیریت کارگاه</h1>
+      <p>ثبت روزانه حضور، مصرف و موجودی</p>
+    </div>
+
+    <div id="login-error" class="alert-fa error" style="display:none;"></div>
+
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <label class="form-label-fa" for="login-email">ایمیل</label>
+      <input class="form-control-fa" type="email" id="login-email" required autocomplete="username" dir="ltr" style="text-align:left;">
+
+      <label class="form-label-fa" for="login-password">رمز عبور</label>
+      <input class="form-control-fa" type="password" id="login-password" required autocomplete="current-password" dir="ltr" style="text-align:left;">
+
+      <div style="margin-top:20px;">
+        <button type="submit" id="login-submit" class="btn-app">ورود</button>
+      </div>
+    </form>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/jalali.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script>redirectIfLoggedIn();</script>
+</body>
+</html>

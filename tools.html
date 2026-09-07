@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>ابزار | سامانه کارگاه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <div class="topbar" style="display:flex;justify-content:space-between;align-items:center;">
+    <div class="date-big">ابزار</div>
+    <button onclick="handleLogout()" style="background:none;border:1px solid rgba(255,255,255,.3);color:#F4F0E8;border-radius:6px;padding:6px 12px;font-size:.8rem;font-family:inherit;">خروج</button>
+  </div>
+
+  <div class="container-app">
+    <div class="top-title-row" style="margin-top:6px;">
+      <div></div>
+      <button class="btn-app small" onclick="openAddToolSheet()">+ افزودن ابزار</button>
+    </div>
+    <div id="tools-list">در حال بارگذاری...</div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><span class="icon">🏠</span>خانه</a>
+    <a href="calendar.html"><span class="icon">📅</span>تقویم</a>
+    <a href="workers.html"><span class="icon">👷</span>افراد</a>
+    <a href="inventory.html"><span class="icon">📦</span>مصالح</a>
+    <a href="tools.html" class="active"><span class="icon">🧰</span>ابزار</a>
+  </nav>
+
+  <!-- ===== sheet: add tool / tool detail+history ===== -->
+  <div class="sheet" id="sheet-tool-edit">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-tool-edit')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="tool-sheet-title">افزودن ابزار جدید</div>
+
+    <!-- add mode -->
+    <form id="tool-add-mode" onsubmit="submitNewTool(event)">
+      <label class="form-label-fa">نام ابزار</label>
+      <input class="form-control-fa" id="t-name" placeholder="مثلاً: بیل" required>
+
+      <label class="form-label-fa">واحد</label>
+      <input class="form-control-fa" id="t-unit" value="عدد">
+
+      <label class="form-label-fa">تعداد اولیه</label>
+      <input class="form-control-fa" id="t-initial" type="number" inputmode="decimal" min="0" step="any" value="0">
+
+      <label class="form-label-fa">حد هشدار</label>
+      <input class="form-control-fa" id="t-min" type="number" inputmode="decimal" min="0" step="any" value="0">
+
+      <label class="form-label-fa">یادداشت (اختیاری)</label>
+      <textarea class="form-control-fa" id="t-notes" rows="2"></textarea>
+
+      <div style="margin-top:18px;">
+        <button type="submit" class="btn-app">ذخیره</button>
+      </div>
+    </form>
+
+    <!-- detail / edit + adjustment + history mode -->
+    <div id="tool-detail-mode" style="display:none;">
+      <div class="card-flat accent-left" style="text-align:center;">
+        <div style="color:var(--muted);font-size:.85rem;">تعداد فعلی</div>
+        <div id="td-current" style="font-size:1.6rem;font-weight:800;"></div>
+      </div>
+
+      <div class="section-title">ثبت تغییر تعداد</div>
+      <form onsubmit="submitToolAdjustment(event)">
+        <label class="form-label-fa">نوع تغییر</label>
+        <select class="form-control-fa" id="td-adj-type">
+          <option value="added">اضافه شده</option>
+          <option value="lost">گم شده</option>
+          <option value="broken">خراب شده</option>
+          <option value="removed">حذف شده</option>
+        </select>
+        <label class="form-label-fa">مقدار</label>
+        <input class="form-control-fa" id="td-adj-qty" type="number" inputmode="decimal" min="0" step="any">
+        <div style="margin-top:12px;">
+          <button type="submit" class="btn-app">ثبت تغییر</button>
+        </div>
+      </form>
+
+      <div class="section-title">ویرایش مشخصات</div>
+      <form onsubmit="submitEditTool(event)">
+        <label class="form-label-fa">نام ابزار</label>
+        <input class="form-control-fa" id="td-edit-name" required>
+
+        <label class="form-label-fa">واحد</label>
+        <input class="form-control-fa" id="td-edit-unit" required>
+
+        <label class="form-label-fa">حد هشدار</label>
+        <input class="form-control-fa" id="td-edit-min" type="number" inputmode="decimal" min="0" step="any">
+
+        <label class="form-label-fa">یادداشت</label>
+        <textarea class="form-control-fa" id="td-edit-notes" rows="2"></textarea>
+
+        <div class="check-row">
+          <input type="checkbox" id="td-edit-active">
+          <span class="who">فعال</span>
+        </div>
+
+        <div style="margin-top:14px;">
+          <button type="submit" class="btn-app outline">ذخیره تغییرات</button>
+        </div>
+      </form>
+
+      <div class="section-title">تاریخچه کامل</div>
+      <div id="td-history"></div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/jalali.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/tools.js"></script>
+</body>
+</html>

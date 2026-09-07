@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>مصالح | سامانه کارگاه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <div class="topbar" style="display:flex;justify-content:space-between;align-items:center;">
+    <div class="date-big">مصالح</div>
+    <button onclick="handleLogout()" style="background:none;border:1px solid rgba(255,255,255,.3);color:#F4F0E8;border-radius:6px;padding:6px 12px;font-size:.8rem;font-family:inherit;">خروج</button>
+  </div>
+
+  <div class="container-app">
+    <div class="top-title-row" style="margin-top:6px;">
+      <div></div>
+      <button class="btn-app small" onclick="openAddMaterialSheet()">+ افزودن کالا</button>
+    </div>
+    <div id="materials-list">در حال بارگذاری...</div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><span class="icon">🏠</span>خانه</a>
+    <a href="calendar.html"><span class="icon">📅</span>تقویم</a>
+    <a href="workers.html"><span class="icon">👷</span>افراد</a>
+    <a href="inventory.html" class="active"><span class="icon">📦</span>مصالح</a>
+    <a href="tools.html"><span class="icon">🧰</span>ابزار</a>
+  </nav>
+
+  <!-- ===== sheet: add material / material detail+history ===== -->
+  <div class="sheet" id="sheet-material-edit">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-material-edit')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="material-sheet-title">افزودن کالای جدید</div>
+
+    <!-- add mode -->
+    <form id="mat-add-mode" onsubmit="submitNewMaterial(event)">
+      <label class="form-label-fa">نام کالا</label>
+      <input class="form-control-fa" id="m-name" placeholder="مثلاً: سیمان" required>
+
+      <label class="form-label-fa">واحد</label>
+      <input class="form-control-fa" id="m-unit" placeholder="مثلاً: کیسه، عدد، متر" required>
+
+      <label class="form-label-fa">موجودی اولیه</label>
+      <input class="form-control-fa" id="m-initial" type="number" inputmode="decimal" min="0" step="any" value="0">
+
+      <label class="form-label-fa">حد هشدار (کمترین موجودی مجاز)</label>
+      <input class="form-control-fa" id="m-min" type="number" inputmode="decimal" min="0" step="any" value="0">
+
+      <label class="form-label-fa">یادداشت (اختیاری)</label>
+      <textarea class="form-control-fa" id="m-notes" rows="2"></textarea>
+
+      <div style="margin-top:18px;">
+        <button type="submit" class="btn-app">ذخیره</button>
+      </div>
+    </form>
+
+    <!-- detail / edit + history mode -->
+    <div id="mat-detail-mode" style="display:none;">
+      <div class="card-flat accent-left" style="text-align:center;">
+        <div style="color:var(--muted);font-size:.85rem;">موجودی فعلی</div>
+        <div id="md-current" style="font-size:1.6rem;font-weight:800;"></div>
+      </div>
+
+      <div class="section-title">ویرایش مشخصات</div>
+      <form onsubmit="submitEditMaterial(event)">
+        <label class="form-label-fa">نام کالا</label>
+        <input class="form-control-fa" id="md-edit-name" required>
+
+        <label class="form-label-fa">واحد</label>
+        <input class="form-control-fa" id="md-edit-unit" required>
+
+        <label class="form-label-fa">حد هشدار</label>
+        <input class="form-control-fa" id="md-edit-min" type="number" inputmode="decimal" min="0" step="any">
+
+        <label class="form-label-fa">یادداشت</label>
+        <textarea class="form-control-fa" id="md-edit-notes" rows="2"></textarea>
+
+        <div class="check-row">
+          <input type="checkbox" id="md-edit-active">
+          <span class="who">فعال</span>
+        </div>
+
+        <div style="margin-top:14px;">
+          <button type="submit" class="btn-app outline">ذخیره تغییرات</button>
+        </div>
+      </form>
+
+      <div class="section-title">تاریخچه کامل</div>
+      <div id="md-history"></div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/jalali.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/inventory.js"></script>
+</body>
+</html>

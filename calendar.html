@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>تقویم | سامانه کارگاه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <div class="topbar" style="display:flex;justify-content:space-between;align-items:center;">
+    <div class="date-big">تقویم</div>
+    <button onclick="handleLogout()" style="background:none;border:1px solid rgba(255,255,255,.3);color:#F4F0E8;border-radius:6px;padding:6px 12px;font-size:.8rem;font-family:inherit;">خروج</button>
+  </div>
+
+  <div class="container-app">
+    <div class="cal-nav">
+      <button onclick="changeMonth(1)">›</button>
+      <div id="cal-month-label" style="font-weight:800;font-size:1.05rem;"></div>
+      <button onclick="changeMonth(-1)">‹</button>
+    </div>
+    <div class="cal-grid" style="margin-bottom:4px;">
+      <div class="cal-dow">ش</div><div class="cal-dow">ی</div><div class="cal-dow">د</div>
+      <div class="cal-dow">س</div><div class="cal-dow">چ</div><div class="cal-dow">پ</div><div class="cal-dow">ج</div>
+    </div>
+    <div class="cal-grid" id="cal-grid-days"></div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html"><span class="icon">🏠</span>خانه</a>
+    <a href="calendar.html" class="active"><span class="icon">📅</span>تقویم</a>
+    <a href="workers.html"><span class="icon">👷</span>افراد</a>
+    <a href="inventory.html"><span class="icon">📦</span>مصالح</a>
+    <a href="tools.html"><span class="icon">🧰</span>ابزار</a>
+  </nav>
+
+  <!-- ===== sheet: day detail ===== -->
+  <div class="sheet" id="sheet-day">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-day')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="day-sheet-title"></div>
+
+    <div class="quick-grid" style="margin-top:6px;">
+      <button type="button" class="quick-btn" onclick="openDayTxSheet('consumption')"><span class="icon">📦</span>ثبت مصرف</button>
+      <button type="button" class="quick-btn" onclick="openDayTxSheet('purchase')"><span class="icon">📥</span>ورود کالا</button>
+    </div>
+
+    <div class="section-title">افراد حاضر</div>
+    <div id="day-attendance-list"></div>
+
+    <div class="section-title">تراکنش‌های مصالح</div>
+    <div id="day-tx-list"></div>
+
+    <div class="section-title">یادداشت</div>
+    <form onsubmit="submitDayNote(event)">
+      <textarea class="form-control-fa" id="day-note-input" rows="3"></textarea>
+      <div style="margin-top:10px;">
+        <button type="submit" class="btn-app outline">ذخیره یادداشت</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ===== sheet: day-specific material transaction ===== -->
+  <div class="sheet" id="sheet-day-tx">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-day-tx')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="day-tx-title"></div>
+    <form id="day-tx-form" onsubmit="submitDayTx(event)">
+      <label class="form-label-fa">کالا</label>
+      <select class="form-control-fa" id="day-tx-select"></select>
+
+      <label class="form-label-fa">مقدار (<span id="day-tx-unit"></span>)</label>
+      <input class="form-control-fa" id="day-tx-qty" type="number" inputmode="decimal" min="0" step="any" required>
+
+      <div style="margin-top:18px;">
+        <button type="submit" class="btn-app">ثبت</button>
+      </div>
+    </form>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/jalali.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/calendar.js"></script>
+</body>
+</html>

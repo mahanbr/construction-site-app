@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>خانه | سامانه کارگاه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+    <div class="topbar" style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div>
+      <div class="date-fa">امروز</div>
+      <div class="date-big" id="today-date">در حال بارگذاری...</div>
+    </div>
+    <button onclick="handleLogout()" style="background:none;border:1px solid rgba(255,255,255,.3);color:#F4F0E8;border-radius:6px;padding:6px 12px;font-size:.8rem;font-family:inherit;">خروج</button>
+  </div>
+
+  <div class="container-app">
+
+    <!-- Quick actions -->
+    <div class="quick-grid">
+      <button class="quick-btn primary" onclick="openAttendanceSheet()"><span class="icon">👷</span> ثبت حضور</button>
+      <button class="quick-btn" onclick="openMaterialSheet('consumption')"><span class="icon">📦</span> ثبت مصرف</button>
+      <button class="quick-btn" onclick="openMaterialSheet('purchase')"><span class="icon">📥</span> ورود کالا</button>
+      <button class="quick-btn" onclick="openAdjustSheet()"><span class="icon">🛠️</span> اصلاح موجودی</button>
+      <button class="quick-btn" onclick="openNoteSheet()" style="grid-column: span 2;"><span class="icon">📝</span> یادداشت امروز</button>
+    </div>
+
+    <div class="section-title">امروز در کارگاه</div>
+    <div class="card-flat accent-left">
+      <p>👷 حاضرین: <span id="today-attendance">در حال بارگذاری...</span></p>
+    </div>
+    <div class="card-flat">
+      <div style="font-weight:700;margin-bottom:4px;">📦 مصرف امروز</div>
+      <div id="today-consumption">در حال بارگذاری...</div>
+    </div>
+    <div class="card-flat positive-left">
+      <div style="font-weight:700;margin-bottom:4px;">📥 ورود امروز</div>
+      <div id="today-incoming">در حال بارگذاری...</div>
+    </div>
+    <div class="card-flat">
+      <div style="font-weight:700;margin-bottom:4px;">📝 یادداشت</div>
+      <div id="today-note">در حال بارگذاری...</div>
+    </div>
+
+    <div id="low-stock-box" style="display:none;"></div>
+
+    <div class="top-title-row" style="margin-top:18px;">
+      <div class="section-title" style="margin:0;">موجودی فعلی</div>
+      <a href="inventory.html" class="pill">مشاهده همه ←</a>
+    </div>
+    <div class="card-flat" id="inventory-summary">در حال بارگذاری...</div>
+
+  </div>
+
+  <!-- ===== bottom nav ===== -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="active"><span class="icon">🏠</span>خانه</a>
+    <a href="calendar.html"><span class="icon">📅</span>تقویم</a>
+    <a href="workers.html"><span class="icon">👷</span>افراد</a>
+    <a href="inventory.html"><span class="icon">📦</span>مصالح</a>
+    <a href="tools.html"><span class="icon">🧰</span>ابزار</a>
+  </nav>
+
+  <!-- ===== sheet: attendance ===== -->
+  <div class="sheet" id="sheet-attendance">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-attendance')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">ثبت حضور امروز</div>
+    <div id="attendance-list"></div>
+  </div>
+
+  <!-- ===== sheet: material consumption / purchase ===== -->
+  <div class="sheet" id="sheet-material">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-material')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="mat-sheet-title">ثبت مصرف</div>
+    <form id="mat-form" onsubmit="submitMaterialTx(event)">
+      <label class="form-label-fa">کالا</label>
+      <select class="form-control-fa" id="mat-select"></select>
+
+      <label class="form-label-fa">مقدار (<span id="mat-unit-label"></span>)</label>
+      <input class="form-control-fa" id="mat-qty" type="number" inputmode="decimal" min="0" step="any" required>
+
+      <div style="margin-top:18px;">
+        <button type="submit" class="btn-app" id="mat-submit-btn">ثبت</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ===== sheet: inventory adjustment ===== -->
+  <div class="sheet" id="sheet-adjust">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-adjust')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">اصلاح موجودی</div>
+    <form id="adjust-form" onsubmit="submitAdjust(event)">
+      <label class="form-label-fa">کالا</label>
+      <select class="form-control-fa" id="adj-select"></select>
+
+      <p style="color:var(--muted);font-size:.88rem;margin-top:8px;">
+        موجودی محاسبه‌شده فعلی: <b id="adj-current-label"></b>
+      </p>
+
+      <label class="form-label-fa">موجودی واقعی (<span id="adj-unit-label"></span>)</label>
+      <input class="form-control-fa" id="adj-actual" type="number" inputmode="decimal" min="0" step="any" required>
+
+      <label class="form-label-fa">یادداشت (اختیاری)</label>
+      <textarea class="form-control-fa" id="adj-note" rows="2" placeholder="مثلاً: مصرف دو روز قبل ثبت نشده بود"></textarea>
+
+      <div style="margin-top:18px;">
+        <button type="submit" class="btn-app">ثبت اصلاح</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ===== sheet: today's note ===== -->
+  <div class="sheet" id="sheet-note">
+    <button class="sheet-close" onclick="Utils.closeSheet('sheet-note')">✕</button>
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">یادداشت امروز</div>
+    <form onsubmit="submitNote(event)">
+      <textarea class="form-control-fa" id="note-input" rows="4" placeholder="مثلاً: دیوار طبقه دوم شروع شد"></textarea>
+      <div style="margin-top:18px;">
+        <button type="submit" class="btn-app">ذخیره یادداشت</button>
+      </div>
+    </form>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/jalali.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
